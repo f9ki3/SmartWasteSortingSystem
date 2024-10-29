@@ -8,6 +8,11 @@ app = Flask(__name__)
 def login():
     return render_template('login.html')
 
+@app.route('/logout')
+def logout():
+    # session.clear()
+    return redirect('/')
+
 @app.route('/admin-home')
 def user():
     return render_template('admin.html')
