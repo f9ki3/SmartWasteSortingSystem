@@ -15,7 +15,7 @@
                         <div class="text-center">
                             <h1 class="fw-bolder" style="margin-top: -200px;">Welcome Admin</h1>
                             <p>Smart Waste Sorting System</p>
-                    
+                        
                             <div class="form-floating mb-3">
                                 <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
                                 <label for="floatingInput">Email address</label>
@@ -24,9 +24,34 @@
                                 <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
                                 <label for="floatingPassword">Password</label>
                             </div>
-                            
-                            <button class="btn btn-warning w-100 btn-lg mt-3">Login</button>
+                        
+                            <button id="loginBtn" class="btn btn-warning w-100 btn-lg mt-3">Login</button>
+                        
+                            <div id="loginMessage" class="mt-3"></div>
                         </div>
+                        <script>
+                            $(document).ready(function() {
+                                $('#loginBtn').on('click', function() {
+                                    // Get the values from the input fields
+                                    const email = $('#floatingInput').val();
+                                    const password = $('#floatingPassword').val();
+                        
+                                    // Hard-coded credentials for demonstration
+                                    const correctEmail = 'admin';
+                                    const correctPassword = 'admin';
+                        
+                                    // Check if the email and password are correct
+                                    if (email === correctEmail && password === correctPassword) {
+                                        $('#loginMessage').html('<div class="alert alert-success">Login successful!</div>');
+                                        // Redirect or load the next page
+                                        // window.location.href = 'dashboard.html'; // Uncomment to redirect
+                                    } else {
+                                        $('#loginMessage').html('<div class="alert alert-danger">Invalid email or password!</div>');
+                                    }
+                                });
+                            });
+                        </script>
+                        
                     </div>
                 </div>                
                 <div class="col-12 col-md-4"></div>
