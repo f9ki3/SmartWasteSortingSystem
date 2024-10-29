@@ -2,16 +2,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iService</title>
+    <title>Smart Waste Sorting System</title>
     {% include 'header_links.html' %}
 </head>
-<body>
+<body style="background-image: url('../static/img/bg.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
     <div class="container pt-3">
-        <div class="container pt-3">
-            <div id="log_"  class="row d-flex justify-content-center flex-column align-items-center"></div>
+        <div class="content">
+            <div class="row">
+                <div class="col-12 col-md-4"></div>
+                <div class="col-12 col-md-4">
+                    <div>
+                        <h1 class="fw-bolder">Welcome Admin</h1>
+                        <p>Smart Waste Sorting System</p>
+
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                            <label for="floatingInput">Email address</label>
+                            </div>
+                            <div class="form-floating">
+                            <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                            <label for="floatingPassword">Password</label>
+                        </div>
+                        
+                        <button class="btn btn-warning w-100 btn-lg mt-3">Login</button>
+                    </div>
+                </div>
+                <div class="col-12 col-md-4"></div>
+            </div>
         </div>
     </div>
     {% include 'footer_links.html' %}
 </body>
+
 </html>
 
