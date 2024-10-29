@@ -31,25 +31,37 @@
                         </div>
                         <script>
                             $(document).ready(function() {
-                                $('#loginBtn').on('click', function() {
+                                // Function to handle the login process
+                                function handleLogin() {
                                     // Get the values from the input fields
                                     const email = $('#floatingInput').val();
                                     const password = $('#floatingPassword').val();
-                        
+                            
                                     // Hard-coded credentials for demonstration
                                     const correctEmail = 'admin';
                                     const correctPassword = 'admin';
-                        
+                            
                                     // Check if the email and password are correct
                                     if (email === correctEmail && password === correctPassword) {
-                                        $('#loginMessage').html('<div class="alert alert-success">Login successful!</div>');
-                                        // Redirect or load the next page
-                                        // window.location.href = 'dashboard.html'; // Uncomment to redirect
+                                        // Redirect to a new URL
+                                        window.location.href = "/admin-home";
                                     } else {
                                         $('#loginMessage').html('<div class="alert alert-danger">Invalid email or password!</div>');
                                     }
+                                }
+                            
+                                // Trigger login on button click
+                                $('#loginBtn').on('click', handleLogin);
+                            
+                                // Trigger login on Enter key press in the input fields
+                                $('#floatingInput, #floatingPassword').on('keydown', function(event) {
+                                    if (event.key === "Enter") {
+                                        event.preventDefault(); // Prevent form submission if it's in a form
+                                        handleLogin(); // Call the login function
+                                    }
                                 });
                             });
+                            
                         </script>
                         
                     </div>
