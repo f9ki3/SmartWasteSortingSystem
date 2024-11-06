@@ -8,7 +8,7 @@
 <body>
     {% include 'nav.html' %}
     <div class="container pt-5">
-        <div class="row">
+        <div class="row g-3">
             <div class="col-12 justify-content-center col-md-8 shadow rounded-4 border p-5">
                 <div>
                     <h2 class="fw-bolder">Welcome Smart Waste Sorting System</h2>
@@ -34,6 +34,33 @@
                 
             </div>
             <div class="col-12 col-md-6"></div>
+            <div class="col-12 justify-content-center col-md-8 shadow rounded-4 border p-5">
+                <div>
+                    <h2 class="fw-bolder">AI Camera Sorter</h2>
+                </div>
+                <div>
+                    <video id="camera-feed" class="rounded-3" autoplay></video>
+                </div>
+                
+                <script>
+                    function openCamera() {
+                        const video = document.getElementById('camera-feed');
+                
+                        navigator.mediaDevices.getUserMedia({ video: true })
+                            .then(stream => {
+                                video.style.display = 'block'; // Show video when camera opens
+                                video.srcObject = stream;
+                            })
+                            .catch(error => {
+                                console.error("Error accessing camera:", error);
+                                alert("Could not access the camera.");
+                            });
+                    }
+                
+                    // Automatically open the camera when the page loads
+                    window.onload = openCamera;
+                </script>
+            </div>
         </div>
     </div>
     {% include 'footer_links.html' %}
