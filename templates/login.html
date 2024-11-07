@@ -4,17 +4,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart Waste Sorting System</title>
     {% include 'header_links.html' %}
+    <style>
+        .dim-background {
+          position: relative;
+          background-image: url('../static/img/bg1.jpg');
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+          height: 100vh; /* Full height of the viewport */
+        }
+      
+        .dim-background::after {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.5); /* Adjust opacity for dimming */
+          z-index: 1;
+        }
+      
+        .content {
+          position: relative;
+          z-index: 2; /* Ensure content appears above the dim overlay */
+        }
+      </style>
 </head>
 <body style="background-image: url('../static/img/bg1.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
-    <div class="container">
+    <div class=" dim-background">
         <div class="content">
             <div class="row">
                 <div class="col-12 col-md-4"></div>
                 <div class="col-12 col-md-4 d-flex align-items-center justify-content-center" style="min-height: 100vh;">
                     <div>
                         <div class="text-center">
-                            <h1 class="fw-bolder" style="margin-top: -200px;">Welcome Admin</h1>
-                            <p>Smart Waste Sorting System</p>
+                            <h1 class="fw-bolder text-light" style="margin-top: -200px;">Welcome Admin</h1>
+                            <p class="text-light">Smart Waste Sorting System</p>
                         
                             <div class="form-floating mb-3">
                                 <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">

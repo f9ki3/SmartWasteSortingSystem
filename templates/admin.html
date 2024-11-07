@@ -5,63 +5,136 @@
     <title>Smart Waste Sorting System</title>
     {% include 'header_links.html' %}
 </head>
-<body>
+<body style="background-color: #f1f8fe">
     {% include 'nav.html' %}
-    <div class="container pt-5">
-        <div class="row g-3">
-            <div class="col-12 justify-content-center col-md-8 shadow rounded-4 border p-5">
-                <div>
-                    <h2 class="fw-bolder">Welcome Smart Waste Sorting System</h2>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-12 col-md-6">
-                        <p>Trashbin 1</p>
-                        <div id="trashbin1"></div>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <p>Trashbin 2</p>
-                        <div id="trashbin2"></div>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <p>Trashbin 3</p>
-                        <div id="trashbin3"></div>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <p>Trashbin 4</p>
-                        <div id="trashbin4"></div>
+    <div class="container">
+        <div class="row g-4 mt-3">
+            <!-- Sidebar Menu -->
+            <div class="col-12 col-md-4 h-100">
+                <div class="position-fixed" style="width: 100%; max-width: 350px;"> <!-- Adjust max-width as desired -->
+                    <div class="p-3 rounded-4" style="width: 100%;">
+                        <h3 class="fw-bolder">Menu</h3>
+                        <button id="waste_lvl" class="d-flex justify-content-between align-items-center btn rounded-4 w-100 text-start text-muted mb-3 btn-lg" style="background-color: white; font-size: 20px; height: 4rem;">Waste Level<i class="bi bi-lightning-charge"></i></button>
+                        <button id="object_det" class="d-flex justify-content-between align-items-center btn rounded-4 w-100 text-start text-muted mb-3 btn-lg" style="background-color: white; font-size: 20px; height: 4rem;">Object Detect<i class="bi bi-webcam"></i></button>
+                        <h3 class="fw-bolder mt-3">Devices</h3>
+                        <button id="ai_cam" class="d-flex justify-content-between align-items-center btn rounded-4 w-100 text-start text-muted mb-3 btn-lg" style="background-color: white; font-size: 20px; height: 4rem;">AI Camera<i class="bi bi-camera"></i></button>
+                        <button id="plastic" class="d-flex justify-content-between align-items-center btn rounded-4 w-100 text-start text-muted mb-3 btn-lg" style="background-color: white; font-size: 20px; height: 4rem;">Plastic Bin<i class="bi bi-virus2"></i></button>
+                        <button id="paper" class="d-flex justify-content-between align-items-center btn rounded-4 w-100 text-start text-muted mb-3 btn-lg" style="background-color: white; font-size: 20px; height: 4rem;">Paper Bin<i class="bi bi-paperclip"></i></button>
+                        <button id="metal" class="d-flex justify-content-between align-items-center btn rounded-4 w-100 text-start text-muted mb-3 btn-lg" style="background-color: white; font-size: 20px; height: 4rem;">Metal Bin<i class="bi bi-align-bottom"></i></button>
+                        <button id="waste" class="d-flex justify-content-between align-items-center btn rounded-4 w-100 text-start text-muted mb-3 btn-lg" style="background-color: white; font-size: 20px; height: 4rem;">Waste Bin<i class="bi bi-trash2"></i></button>
                     </div>
                 </div>
-                
             </div>
-            <div class="col-12 col-md-6"></div>
-            <div class="col-12 justify-content-center col-md-8 shadow rounded-4 border p-5">
-                <div>
-                    <h2 class="fw-bolder">AI Camera Sorter</h2>
+        
+            <!-- Main Content -->
+            <div class="col-12 col-md-8 h-100">
+                <!-- Waste Level Monitoring Section -->
+                <div class="rounded-4 p-5" style="background-color: #fefffe;">
+                    <h2 class="fw-bolder">Waste Level Monitoring</h2>
+                    <div class="row mt-3">
+                        <div class="col-12 col-md-6">
+                            <p>Trashbin 1</p>
+                            <div id="trashbin1"></div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <p>Trashbin 2</p>
+                            <div id="trashbin2"></div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <p>Trashbin 3</p>
+                            <div id="trashbin3"></div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <p>Trashbin 4</p>
+                            <div id="trashbin4"></div>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <video id="camera-feed" class="rounded-3" autoplay></video>
-                </div>
-                
-                <script>
-                    function openCamera() {
-                        const video = document.getElementById('camera-feed');
-                
-                        navigator.mediaDevices.getUserMedia({ video: true })
-                            .then(stream => {
-                                video.style.display = 'block'; // Show video when camera opens
-                                video.srcObject = stream;
-                            })
-                            .catch(error => {
-                                console.error("Error accessing camera:", error);
-                                alert("Could not access the camera.");
+        
+                <!-- Additional Sections -->
+                <div class="rounded-4 p-5 mt-4 camera-div" style="background-color: #fefffe;">
+                    <h2 class="fw-bolder">Object Detect</h2>
+                    <video class="rounded-4" id="webcam" autoplay ></video>
+                    <canvas id="canvas"></canvas>
+
+                    <script>
+                        const video = document.getElementById('webcam');
+                        const canvas = document.getElementById('canvas');
+                        const ctx = canvas.getContext('2d');
+
+                        // Set up the webcam feed
+                        async function setupWebcam() {
+                            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                            video.srcObject = stream;
+                            await new Promise((resolve) => (video.onloadedmetadata = resolve));
+                            canvas.width = video.videoWidth;
+                            canvas.height = video.videoHeight;
+                        }
+
+                        // Load the model and start detection
+                        async function loadModelAndDetect() {
+                            const model = await cocoSsd.load();
+                            detectFrame(model);
+                        }
+
+                        // Detect objects and draw bounding boxes
+                        async function detectFrame(model) {
+                            const predictions = await model.detect(video);
+                            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                            predictions.forEach(prediction => {
+                                // Draw bounding box
+                                ctx.strokeStyle = "#00FF00";
+                                ctx.lineWidth = 4;
+                                ctx.strokeRect(
+                                    prediction.bbox[0],
+                                    prediction.bbox[1],
+                                    prediction.bbox[2],
+                                    prediction.bbox[3]
+                                );
+
+                                // Draw label and score
+                                ctx.font = "18px Arial";
+                                ctx.fillStyle = "#00FF00";
+                                ctx.fillText(
+                                    `${prediction.class} - ${Math.round(prediction.score * 100)}%`,
+                                    prediction.bbox[0],
+                                    prediction.bbox[1] > 20 ? prediction.bbox[1] - 10 : 10
+                                );
                             });
-                    }
-                
-                    // Automatically open the camera when the page loads
-                    window.onload = openCamera;
-                </script>
+
+                            // Keep detecting
+                            requestAnimationFrame(() => detectFrame(model));
+                        }
+
+                        // Initialize everything
+                        async function initialize() {
+                            await setupWebcam();
+                            loadModelAndDetect();
+                        }
+
+                        initialize();
+                    </script>
+                </div>
+                <div class="rounded-4 p-5 mt-4" style="background-color: #fefffe;">
+                    <h2 class="fw-bolder">AI Camera</h2>
+                </div>
+                <div class="rounded-4 p-5 mt-4" style="background-color: #fefffe;">
+                    <h2 class="fw-bolder">Plastic Bin</h2>
+                </div>
+                <div class="rounded-4 p-5 mt-4" style="background-color: #fefffe;">
+                    <h2 class="fw-bolder">Paper Bin</h2>
+                </div>
+                <div class="rounded-4 p-5 mt-4" style="background-color: #fefffe;">
+                    <h2 class="fw-bolder">Metal Bin</h2>
+                </div>
+                <div class="rounded-4 p-5 mt-4" style="background-color: #fefffe;">
+                    <h2 class="fw-bolder">Waste Bin</h2>
+                </div>
             </div>
         </div>
+        
+        
     </div>
     {% include 'footer_links.html' %}
 </body>

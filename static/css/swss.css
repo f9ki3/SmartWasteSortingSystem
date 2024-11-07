@@ -1,9 +1,25 @@
 .page-link.active {
-  background-color: orange; /* Background color for the active page */
+  background-color: green; /* Background color for the active page */
   color: white; /* Text color for the active page */
-  border-color: orange; /* Border color for the active page */
+  border-color: green; /* Border color for the active page */
 }
 
+#webcam {
+  position: absolute;
+  height: auto;
+}
+#canvas {
+  position: absolute;
+  height: auto;
+  pointer-events: none;
+}
+
+.camera-div {
+    position: relative;
+    width: 100%;
+    max-width: 800px; /* Set max width as desired */
+    height: 650px; /* Adjust height as needed */
+}
 
 @media (max-width: 768px) {
     .nav-admin {
