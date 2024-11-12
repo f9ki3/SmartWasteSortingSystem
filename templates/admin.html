@@ -29,7 +29,7 @@
             <!-- Main Content -->
             <div class="col-12 col-md-8 h-100">
                 <!-- Waste Level Monitoring Section -->
-                <div class="rounded-4 p-5" style="background-color: #fefffe;">
+                <div id="wasteLevelContent" class="rounded-4 p-5" style="background-color: #fefffe;">
                     <h2 class="fw-bolder">Waste Level Monitoring</h2>
                     <div class="row mt-3">
                         <div class="col-12 col-md-6">
@@ -76,12 +76,17 @@
                 </div>
         
                 <!-- Additional Sections -->
-                <div class="rounded-4 p-5 mt-4 camera-div" style="background-color: #fefffe;">
+                <div id="objectDetectContent" class="rounded-4 p-5 camera-div" style="background-color: #fefffe; display: none;">
                     <h2 class="fw-bolder">Object Detect</h2>
-                    <video class="rounded-4" id="webcam" autoplay ></video>
-                    <canvas id="canvas"></canvas>
+                    <video class="rounded-4" id="webcam" autoplay style="display: none;"></video>
+                    <canvas id="canvas" style="display: none;"></canvas>
+                    <div id="noCameraMessage" style="display: none; text-align: center; font-size: 20px; color: red; padding-top: 25%">
+                        <i class="bi bi-camera-video-off" style="font-size: 80px;"></i>
+                        <p>No camera devices connected</p>
+                    </div>
                 </div>
                 
+
                 <!-- <div class="rounded-4 p-5 mt-4" style="background-color: #fefffe;">
                     <h2 class="fw-bolder">AI Camera</h2>
                 </div>
