@@ -1,4 +1,14 @@
 $(document).ready(function() {
+    const socket = io();
+
+    // Function to calculate percentage based on distance
+    function calculatePercentage(distance) {
+        const maxDistance = 20;
+        const minDistance = 2;
+        const percentage = ((maxDistance - distance) / (maxDistance - minDistance)) * 100;
+        return Math.max(0, Math.min(100, percentage)); // Ensure percentage is within 0-100%
+    }
+
     // Function to get the color based on the value
     function getColor(value) {
         if (value >= 1 && value < 50) return '#28a745'; // Green
@@ -17,30 +27,34 @@ $(document).ready(function() {
         return '#FFCCCB'; // Default secondary color
     }
 
-    // Data and configuration for the donut charts
+    // Data for each trash bin
     const trashbinData = [
-        { element: '#trashbin1', value: 30, label: 'Waste Level' },
-        { element: '#trashbin2', value: 55, label: 'Waste Level' },
-        { element: '#trashbin3', value: 65, label: 'Waste Level' },
-        { element: '#trashbin4', value: 80, label: 'Waste Level' },
+        { element: '#trashbin1', value: 0, label: 'Waste Level' },
+        { element: '#trashbin2', value: 0, label: 'Waste Level' },
+        { element: '#trashbin3', value: 0, label: 'Waste Level' },
+        { element: '#trashbin4', value: 0, label: 'Waste Level' },
     ];
 
-    trashbinData.forEach((trashbin) => {
+    // Store chart instances to update them later
+    const charts = [];
+
+    // Initialize charts for each trash bin
+    trashbinData.forEach((trashbin, index) => {
         const options = {
             chart: {
                 type: 'donut',
                 height: 350
             },
-            series: [trashbin.value, 100 - trashbin.value], // Main value and remaining space
-            labels: [trashbin.label, 'Remaining'], // Labels for the segments
-            colors: [getColor(trashbin.value), getSecondaryColor(trashbin.value)], // Primary and secondary colors
+            series: [trashbin.value, 100 - trashbin.value],
+            labels: [trashbin.label, 'Remaining'],
+            colors: [getColor(trashbin.value), getSecondaryColor(trashbin.value)],
             dataLabels: {
-                enabled: true, // Enable data labels
+                enabled: true,
                 formatter: function(val) {
-                    return Math.round(val) + '%'; // Format to show percentage
+                    return Math.round(val) + '%';
                 },
                 dropShadow: {
-                    enabled: false // Disable drop shadow
+                    enabled: false
                 }
             },
             plotOptions: {
@@ -49,14 +63,14 @@ $(document).ready(function() {
                 }
             },
             stroke: {
-                width: 0 // No stroke on the donut
+                width: 0
             },
             legend: {
-                show: true, // Show the legend
-                position: 'right', // Position the legend on the right
+                show: true,
+                position: 'right',
                 labels: {
-                    colors: '#000', // Color of legend text
-                    useSeriesColors: false // Use specified colors for legend items
+                    colors: '#000',
+                    useSeriesColors: false
                 },
                 itemMargin: {
                     horizontal: 5,
@@ -66,14 +80,48 @@ $(document).ready(function() {
             tooltip: {
                 y: {
                     formatter: function(val) {
-                        return Math.round(val) + '%'; // Show percentage in tooltip
+                        return Math.round(val) + '%';
                     }
                 }
             }
         };
 
-        // Create the donut chart for each trashbin
+        // Create the chart and store the instance
         const chart = new ApexCharts(document.querySelector(trashbin.element), options);
         chart.render();
+        charts.push(chart);
+    });
+
+    // Function to update the chart values
+    const updateChart = (chartIndex, percentage) => {
+        const chart = charts[chartIndex];
+        chart.updateSeries([percentage, 100 - percentage]);
+        chart.updateOptions({
+            colors: [getColor(percentage), getSecondaryColor(percentage)]
+        });
+    };
+
+    // Listen for data updates and update charts accordingly
+    socket.on('updateTrash', (data) => {
+        const percentage = Math.round(calculatePercentage(data.count));
+        updateChart(0, percentage); // Update chart 1 with new percentage
+        $('#trash1').text(percentage+" %")
+    });
+
+    socket.on('updateTrash2', (data) => {
+        const percentage = Math.round(calculatePercentage(data.count));
+        $('#trash2').text(percentage+" %")
+    });
+
+    socket.on('updateTrash3', (data) => {
+        const percentage = Math.round(calculatePercentage(data.count));
+        updateChart(2, percentage); // Update chart 3 with new percentage
+        $('#trash3').text(percentage+" %")
+    });
+
+    socket.on('updateTrash4', (data) => {
+        const percentage = Math.round(calculatePercentage(data.count));
+        updateChart(3, percentage); // Update chart 4 with new percentage
+        $('#trash4').text(percentage+" %")
     });
 });

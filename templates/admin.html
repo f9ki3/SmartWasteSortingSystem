@@ -33,22 +33,46 @@
                     <h2 class="fw-bolder">Waste Level Monitoring</h2>
                     <div class="row mt-3">
                         <div class="col-12 col-md-6">
-                            <p>Trashbin 1</p>
+                            <div class="d-flex flex-row justify-content-between">
+                                <p>Trashbin 1</p>
+                                <h3 id="trash1" class="text-end">0%</h3>
+                            </div>
                             <div id="trashbin1"></div>
                         </div>
                         <div class="col-12 col-md-6">
-                            <p>Trashbin 2</p>
+                            <div class="d-flex flex-row justify-content-between">
+                                <p>Trashbin 2</p>
+                                <h3 id="trash2" class="text-end">0%</h3>
+                            </div>
                             <div id="trashbin2"></div>
                         </div>
                         <div class="col-12 col-md-6">
-                            <p>Trashbin 3</p>
+                            <div class="d-flex flex-row justify-content-between">
+                                <p>Trashbin 3</p>
+                                <h3 id="trash3" class="text-end">0%</h3>
+                            </div>
                             <div id="trashbin3"></div>
                         </div>
                         <div class="col-12 col-md-6">
-                            <p>Trashbin 4</p>
+                            <div class="d-flex flex-row justify-content-between">
+                                <p>Trashbin 4</p>
+                                <h3 id="trash4" class="text-end">0%</h3>
+                            </div>
                             <div id="trashbin4"></div>
                         </div>
                     </div>
+                    <!-- <div>
+                        <h3>Microcontroller Connection Status</h3>
+                        <div id="status1">Microcontroller 1: <span class="connection">Not connected</span></div>
+                        <div id="data1">Data: N/A</div>
+                        <div id="status2">Microcontroller 2: <span class="connection">Not connected</span></div>
+                        <div id="data2">Data: N/A</div>
+                        <div id="status3">Microcontroller 3: <span class="connection">Not connected</span></div>
+                        <div id="data3">Data: N/A</div>
+                        <div id="status4">Microcontroller 4: <span class="connection">Not connected</span></div>
+                        <div id="data4">Data: N/A</div>
+
+                    </div> -->
                 </div>
         
                 <!-- Additional Sections -->
@@ -56,65 +80,6 @@
                     <h2 class="fw-bolder">Object Detect</h2>
                     <video class="rounded-4" id="webcam" autoplay ></video>
                     <canvas id="canvas"></canvas>
-
-                    <script>
-                        const video = document.getElementById('webcam');
-                        const canvas = document.getElementById('canvas');
-                        const ctx = canvas.getContext('2d');
-
-                        // Set up the webcam feed
-                        async function setupWebcam() {
-                            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                            video.srcObject = stream;
-                            await new Promise((resolve) => (video.onloadedmetadata = resolve));
-                            canvas.width = video.videoWidth;
-                            canvas.height = video.videoHeight;
-                        }
-
-                        // Load the model and start detection
-                        async function loadModelAndDetect() {
-                            const model = await cocoSsd.load();
-                            detectFrame(model);
-                        }
-
-                        // Detect objects and draw bounding boxes
-                        async function detectFrame(model) {
-                            const predictions = await model.detect(video);
-                            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-                            predictions.forEach(prediction => {
-                                // Draw bounding box
-                                ctx.strokeStyle = "#00FF00";
-                                ctx.lineWidth = 4;
-                                ctx.strokeRect(
-                                    prediction.bbox[0],
-                                    prediction.bbox[1],
-                                    prediction.bbox[2],
-                                    prediction.bbox[3]
-                                );
-
-                                // Draw label and score
-                                ctx.font = "18px Arial";
-                                ctx.fillStyle = "#00FF00";
-                                ctx.fillText(
-                                    `${prediction.class} - ${Math.round(prediction.score * 100)}%`,
-                                    prediction.bbox[0],
-                                    prediction.bbox[1] > 20 ? prediction.bbox[1] - 10 : 10
-                                );
-                            });
-
-                            // Keep detecting
-                            requestAnimationFrame(() => detectFrame(model));
-                        }
-
-                        // Initialize everything
-                        async function initialize() {
-                            await setupWebcam();
-                            loadModelAndDetect();
-                        }
-
-                        initialize();
-                    </script>
                 </div>
                 <div class="rounded-4 p-5 mt-4" style="background-color: #fefffe;">
                     <h2 class="fw-bolder">AI Camera</h2>
