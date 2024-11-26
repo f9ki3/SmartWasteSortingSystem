@@ -1,0 +1,68 @@
+#include <Servo.h>
+
+Servo servoPlastic;  // Servo for plastic
+Servo servoMetal;    // Servo for metal
+Servo servoPaper;    // Servo for paper
+Servo servoWaste;    // Servo for general waste
+
+const int pinPlastic = 9;  // Pin for plastic servo
+const int pinMetal = 10;   // Pin for metal servo
+const int pinPaper = 11;   // Pin for paper servo
+const int pinWaste = 12;   // Pin for general waste servo
+
+void setup() {
+  // Initialize serial communication
+  Serial.begin(9600);
+
+  // Attach servos to their respective pins
+  servoPlastic.attach(pinPlastic);
+  servoMetal.attach(pinMetal);
+  servoPaper.attach(pinPaper);
+  servoWaste.attach(pinWaste);
+
+  // Set initial servo positions
+  servoPlastic.write(0);
+  servoMetal.write(0);
+  servoPaper.write(0);
+  servoWaste.write(0);
+
+  Serial.println("Servo waste segregation system initialized.");
+}
+
+void loop() {
+  // Check if there is incoming data
+  if (Serial.available() > 0) {
+    // Read and trim the incoming data
+    String input = Serial.readStringUntil('\n');
+    input.trim(); // Remove any extra whitespace or newline characters
+    Serial.println("Received: " + input);
+
+    // Act based on the input
+    if (input == "plastic") {
+      Serial.println("Moving plastic servo");
+      moveServo(servoPlastic);
+    } 
+    else if (input == "metal") {
+      Serial.println("Moving metal servo");
+      moveServo(servoMetal);
+    } 
+    else if (input == "paper") {
+      Serial.println("Moving paper servo");
+      moveServo(servoPaper);
+    } 
+    else if (input == "waste") {
+      Serial.println("Moving waste servo");
+      moveServo(servoWaste);
+    } 
+    else {
+      Serial.println("Unknown input");
+    }
+  }
+}
+
+// Function to move a servo to 180 degrees and reset to 0
+void moveServo(Servo &servo) {
+  servo.write(180);  // Move servo to 180 degrees
+  delay(1000);       // Wait for 1 second
+  servo.write(0);    // Reset to 0 degrees
+}

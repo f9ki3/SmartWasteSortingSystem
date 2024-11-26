@@ -16,7 +16,7 @@
                         <h3 class="fw-bolder">Menu</h3>
                         <button id="waste_lvl" class="d-flex justify-content-between align-items-center btn rounded-4 w-100 text-start text-muted mb-3 btn-lg" style="background-color: white; font-size: 20px; height: 4rem;">Waste Level<i class="bi bi-lightning-charge"></i></button>
                         <button id="object_det" class="d-flex justify-content-between align-items-center btn rounded-4 w-100 text-start text-muted mb-3 btn-lg" style="background-color: white; font-size: 20px; height: 4rem;">Object Detect<i class="bi bi-webcam"></i></button>
-                        <h3 class="fw-bolder mt-3">Devices</h3>
+                        <h3 class="fw-bolder mt-3">Data Collected</h3>
                         <button id="ai_cam" class="d-flex justify-content-between align-items-center btn rounded-4 w-100 text-start text-muted mb-3 btn-lg" style="background-color: white; font-size: 20px; height: 4rem;">AI Camera<i class="bi bi-camera"></i></button>
                         <button id="plastic" class="d-flex justify-content-between align-items-center btn rounded-4 w-100 text-start text-muted mb-3 btn-lg" style="background-color: white; font-size: 20px; height: 4rem;">Plastic Bin<i class="bi bi-virus2"></i></button>
                         <button id="paper" class="d-flex justify-content-between align-items-center btn rounded-4 w-100 text-start text-muted mb-3 btn-lg" style="background-color: white; font-size: 20px; height: 4rem;">Paper Bin<i class="bi bi-paperclip"></i></button>
@@ -34,28 +34,28 @@
                     <div class="row mt-3">
                         <div class="col-12 col-md-6">
                             <div class="d-flex flex-row justify-content-between">
-                                <p>Trashbin 1</p>
+                                <p>Plastic</p>
                                 <h3 id="trash1" class="text-end">0%</h3>
                             </div>
                             <div id="trashbin1"></div>
                         </div>
                         <div class="col-12 col-md-6">
                             <div class="d-flex flex-row justify-content-between">
-                                <p>Trashbin 2</p>
+                                <p>Paper</p>
                                 <h3 id="trash2" class="text-end">0%</h3>
                             </div>
                             <div id="trashbin2"></div>
                         </div>
                         <div class="col-12 col-md-6">
                             <div class="d-flex flex-row justify-content-between">
-                                <p>Trashbin 3</p>
+                                <p>Metal</p>
                                 <h3 id="trash3" class="text-end">0%</h3>
                             </div>
                             <div id="trashbin3"></div>
                         </div>
                         <div class="col-12 col-md-6">
                             <div class="d-flex flex-row justify-content-between">
-                                <p>Trashbin 4</p>
+                                <p>Waste</p>
                                 <h3 id="trash4" class="text-end">0%</h3>
                             </div>
                             <div id="trashbin4"></div>
@@ -76,14 +76,34 @@
                 </div>
         
                 <!-- Additional Sections -->
-                <div id="objectDetectContent" class="rounded-4 p-5 camera-div" style="background-color: #fefffe; display: none;">
-                    <h2 class="fw-bolder">Object Detect</h2>
+                <div id="objectDetectContent" class="rounded-4 p-5 camera-div" style="background-color: #fefffe; display: none; height: 750px">
+                    <h2 class="fw-bolder">Scanned Trash Material</h2>
+                    <div class="rounded-4 mb-4 p-3 pt-4 align-items-center d-flex justify-content-center border">
+                        <p id="itemScan">Scanning</p>
+                    </div>
                     <video class="rounded-4" id="webcam" autoplay style="display: none;"></video>
                     <canvas id="canvas" style="display: none;"></canvas>
                     <div id="noCameraMessage" style="display: none; text-align: center; font-size: 20px; color: red; padding-top: 25%">
                         <i class="bi bi-camera-video-off" style="font-size: 80px;"></i>
                         <p>No camera devices connected</p>
                     </div>
+                    
+                    <!-- <h2 style="margin-top: 20px">Scanned Logs</h2>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Trash Type</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>November 27, 2024</td>
+                                <td>Plastic</td>
+                            </tr>
+                        </tbody>
+                    </table> -->
+                    
                 </div>
                 
 

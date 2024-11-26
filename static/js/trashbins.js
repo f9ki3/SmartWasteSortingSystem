@@ -110,6 +110,7 @@ $(document).ready(function() {
 
     socket.on('updateTrash2', (data) => {
         const percentage = Math.round(calculatePercentage(data.count));
+        updateChart(1, percentage); // Update chart 2 with new percentage
         $('#trash2').text(percentage+" %")
     });
 
