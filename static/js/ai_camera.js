@@ -94,7 +94,7 @@ function startScanning(item) {
         clearInterval(countdownInterval);
         
         // Start the countdown
-        countdownTimer = 10; // Reset the countdown
+        countdownTimer = 5; // Reset the countdown
         countdownInterval = setInterval(() => {
             itemScan.textContent = `Scanning ${item}... (${countdownTimer}s)`;
             countdownTimer--;

@@ -3,7 +3,7 @@ $(document).ready(function() {
 
     // Function to calculate percentage based on distance
     function calculatePercentage(distance) {
-        const maxDistance = 15;
+        const maxDistance = 30;
         const minDistance = 2;
         const percentage = ((maxDistance - distance) / (maxDistance - minDistance)) * 100;
         return Math.max(0, Math.min(100, percentage)); // Ensure percentage is within 0-100%
