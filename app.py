@@ -180,48 +180,6 @@ def sendDataArduino():
         return jsonify({'success': True, 'message': 'Data sent to Arduino', 'data': input_data, 'arduino_response': response})
     else:
         return jsonify({'success': False, 'message': 'No data received'})
-    
-#     # Initialize serial communication with Arduino (adjust COM port)
-# def init_serial_connection():
-#     try:
-#         # Open the serial port (COM6 in this example)
-#         serial = win32com.client.Dispatch("MSComm.MSComm.1")
-#         serial.CommPort = 7  # COM port (adjust this to your port number)
-#         serial.Settings = "9600,N,8,1"  # Baudrate, Parity, Data bits, Stop bits
-#         serial.InputLen = 0  # No timeout
-#         serial.PortOpen = True  # Open the port
-
-#         return serial
-#     except Exception as e:
-#         print(f"Error opening serial port: {e}")
-#         return None
-
-# # Flask route to send data to Arduino
-# @app.route('/sendDataArduino', methods=['POST'])
-# def sendDataArduino():
-#     serial_connection = init_serial_connection()
-#     if serial_connection is None:
-#         return jsonify({'success': False, 'message': 'Arduino not connected or serial port error'})
-
-#     input_data = request.form.get('data')  # Get data from the form (or AJAX)
-#     if input_data:
-#         try:
-#             # Send data to Arduino (write to the serial port)
-#             serial_connection.Output = input_data  # Send data
-
-#             # Wait for Arduino to process the data (or send a response)
-#             time.sleep(2)
-
-#             # Read response from Arduino (if needed)
-#             response = serial_connection.Input  # Get the input data from Arduino
-#             serial_connection.PortOpen = False  # Close the serial connection
-
-#             # Return the response to the client
-#             return jsonify({'success': True, 'message': 'Data sent to Arduino', 'data': input_data, 'arduino_response': response})
-#         except Exception as e:
-#             return jsonify({'success': False, 'message': f'Error communicating with Arduino: {e}'})
-#     else:
-#         return jsonify({'success': False, 'message': 'No data received'})
 
 @app.route('/collect_trash', methods=['POST'])
 def collect_trash():
