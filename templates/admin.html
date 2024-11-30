@@ -236,35 +236,62 @@
                     </div>
                     <script>
                         $(document).ready(function() {
-                            // Make AJAX request to the /retrieved_recycle endpoint
-                            $.ajax({
-                                url: '/retrieved_recycle',  // The URL for the API endpoint
-                                method: 'GET',  // HTTP method (GET in this case)
-                                success: function(response) {
-                                    // Empty the table body before adding new rows
-                                    $('#recycle-data').empty();
-                        
-                                    // Iterate through the response data and add rows to the table
-                                    response.forEach(function(item, index) {
-                                        // Create a new row with the data from the response
-                                        var row = `
-                                            <tr>
-                                                <td>${index + 1}</td>  <!-- Display row number -->
-                                                <td>${item.timestamp}</td>  <!-- Display timestamp -->
-                                                <td>${item.recycle_type}</td>  <!-- Display recycle type -->
-                                            </tr>
-                                        `;
-                                        
-                                        // Append the new row to the table body
-                                        $('#recycle-data').append(row);
-                                    });
-                                },
-                                error: function(error) {
-                                    console.error('Error fetching data:', error);
+                            let previousData = [];
+                    
+                            function fetchData() {
+                                $.ajax({
+                                    url: '/retrieved_recycle',  // The URL for the API endpoint
+                                    method: 'GET',  // HTTP method (GET in this case)
+                                    success: function(response) {
+                                        // Check if the new data is different from the previous data
+                                        if (!arraysAreEqual(response, previousData)) {
+                                            // Empty the table body before adding new rows
+                                            $('#recycle-data').empty();
+                    
+                                            // Iterate through the response data and add rows to the table
+                                            response.forEach(function(item, index) {
+                                                // Create a new row with the data from the response
+                                                var row = `
+                                                    <tr>
+                                                        <td>${index + 1}</td>  <!-- Display row number -->
+                                                        <td>${item.timestamp}</td>  <!-- Display timestamp -->
+                                                        <td>${item.recycle_type}</td>  <!-- Display recycle type -->
+                                                    </tr>
+                                                `;
+                                                
+                                                // Append the new row to the table body
+                                                $('#recycle-data').append(row);
+                                            });
+                    
+                                            // Store the current data for future comparison
+                                            previousData = response;
+                                        }
+                                    },
+                                    error: function(error) {
+                                        console.error('Error fetching data:', error);
+                                    }
+                                });
+                            }
+                    
+                            // Function to compare two arrays of objects (deep comparison)
+                            function arraysAreEqual(arr1, arr2) {
+                                if (arr1.length !== arr2.length) return false;
+                                for (let i = 0; i < arr1.length; i++) {
+                                    if (JSON.stringify(arr1[i]) !== JSON.stringify(arr2[i])) {
+                                        return false;
+                                    }
                                 }
-                            });
-                        });                        
-                    </script>                    
+                                return true;
+                            }
+                    
+                            // Set an interval to poll the server every 5 seconds (adjust as needed)
+                            setInterval(fetchData, 5000);
+                            
+                            // Initial data fetch on page load
+                            fetchData();
+                        });
+                    </script>
+                                    
                 </div>
                 <div id="plastic_div" class="rounded-4 p-5 mt-4" style="background-color: #fefffe; display: none">
                     <h2 class="fw-bolder">Plastic Bin Collected</h2>
@@ -278,7 +305,7 @@
                                     <th style="width: 25%">Type</th>
                                 </tr>
                             </thead>
-                            <tbody id="recycle-data-plastic"></tbody>
+                            <tbody id="recycle-plastic"></tbody>
                         </table>
                     </div>
                 </div>
@@ -329,66 +356,75 @@
                             <tbody id="recycle-waste"></tbody>
                             <script>
                                 $(document).ready(function() {
-                                    $.ajax({
-                                        url: '/retrieve_trash',
-                                        method: 'GET',
-                                        success: function(response) {
-                                            // Check if the response contains data for "Metal"
-                                            if (response.Metal && Array.isArray(response.Metal)) {
-                                                // Clear existing content
-                                                $('#recycle-metal').empty();
-                                                
-                                                // Iterate through each "Metal" item and append to the tbody
-                                                response.Metal.forEach(function(item) {
-                                                    var row = '<tr>' +
-                                                        '<td>' + item.id + '</td>' +
-                                                        '<td>' + item.trash_type + '</td>' +
-                                                        '<td>' + item.amount + '</td>' +
-                                                        '<td>' + item.date_time_collected + '</td>' +
-                                                        '</tr>';
-                                                    $('#recycle-metal').append(row);
+                                    let previousData = {};
+                            
+                                    function fetchData() {
+                                        $.ajax({
+                                            url: '/retrieve_trash',
+                                            method: 'GET',
+                                            success: function(response) {
+                                                // Check if the response contains data for each category
+                                                const categories = ['Metal', 'Plastic', 'Paper', 'Waste'];
+                            
+                                                let dataChanged = false;
+                            
+                                                categories.forEach(function(category) {
+                                                    if (response[category] && Array.isArray(response[category])) {
+                                                        const currentData = response[category];
+                                                        const previousCategoryData = previousData[category] || [];
+                            
+                                                        // Compare the current and previous data
+                                                        if (!arraysAreEqual(currentData, previousCategoryData)) {
+                                                            // Update the table only if there are changes
+                                                            dataChanged = true;
+                            
+                                                            // Clear existing content
+                                                            $('#recycle-' + category.toLowerCase()).empty();
+                            
+                                                            // Iterate through each item and append to the tbody
+                                                            currentData.forEach(function(item) {
+                                                                var row = '<tr>' +
+                                                                    '<td>' + item.id + '</td>' +
+                                                                    '<td>' + item.trash_type + '</td>' +
+                                                                    '<td>' + item.amount + '</td>' +
+                                                                    '<td>' + item.date_time_collected + '</td>' +
+                                                                    '</tr>';
+                                                                $('#recycle-' + category.toLowerCase()).append(row);
+                                                            });
+                                                        }
+                                                    }
                                                 });
                             
-                                                // Iterate through each "Plastic" item and append to the tbody
-                                                response.Plastic.forEach(function(item) {
-                                                    var row = '<tr>' +
-                                                        '<td>' + item.id + '</td>' +
-                                                        '<td>' + item.trash_type + '</td>' +
-                                                        '<td>' + item.amount + '</td>' +
-                                                        '<td>' + item.date_time_collected + '</td>' +
-                                                        '</tr>';
-                                                    $('#recycle-data-plastic').append(row);
-                                                });
-                            
-                                                // Iterate through each "Paper" item and append to the tbody
-                                                response.Paper.forEach(function(item) {
-                                                    var row = '<tr>' +
-                                                        '<td>' + item.id + '</td>' +
-                                                        '<td>' + item.trash_type + '</td>' +
-                                                        '<td>' + item.amount + '</td>' +
-                                                        '<td>' + item.date_time_collected + '</td>' +
-                                                        '</tr>';
-                                                    $('#recycle-paper').append(row);
-                                                });
-                            
-                                                // Iterate through each "Waste" item and append to the tbody
-                                                response.Waste.forEach(function(item) {
-                                                    var row = '<tr>' +
-                                                        '<td>' + item.id + '</td>' +
-                                                        '<td>' + item.trash_type + '</td>' +
-                                                        '<td>' + item.amount + '</td>' +
-                                                        '<td>' + item.date_time_collected + '</td>' +
-                                                        '</tr>';
-                                                    $('#recycle-waste').append(row);
-                                                });
+                                                // Store the current data for future comparison
+                                                if (dataChanged) {
+                                                    previousData = response;
+                                                }
+                                            },
+                                            error: function(xhr, status, error) {
+                                                console.log("Error fetching trash data: " + error);
                                             }
-                                        },
-                                        error: function(xhr, status, error) {
-                                            console.log("Error fetching trash data: " + error);
+                                        });
+                                    }
+                            
+                                    // Function to compare two arrays of objects (deep comparison)
+                                    function arraysAreEqual(arr1, arr2) {
+                                        if (arr1.length !== arr2.length) return false;
+                                        for (let i = 0; i < arr1.length; i++) {
+                                            if (JSON.stringify(arr1[i]) !== JSON.stringify(arr2[i])) {
+                                                return false;
+                                            }
                                         }
-                                    });
+                                        return true;
+                                    }
+                            
+                                    // Set an interval to poll the server every 5 seconds (adjust as needed)
+                                    setInterval(fetchData, 5000);
+                                    
+                                    // Initial data fetch on page load
+                                    fetchData();
                                 });
-                            </script>                            
+                            </script>
+                                                
                         </table>
                     </div>
                 </div>

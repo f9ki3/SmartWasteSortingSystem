@@ -2,14 +2,14 @@ from flask import Flask, render_template, jsonify, request, session, redirect, u
 from flask_socketio import SocketIO, emit
 import os, threading
 import serial
-# import win32com.client
+import win32com.client
 import time
 from data_logs import *
 
 app = Flask(__name__)
 socketio = SocketIO(app)
 
-# # Initialize serial communication with Arduino (change the port if necessary)
+# Initialize serial communication with Arduino (change the port if necessary)
 try:
     arduino = serial.Serial('COM21', 9600, timeout=1)
     print("Successfully connected to the Arduino!")
@@ -181,20 +181,20 @@ def sendDataArduino():
     else:
         return jsonify({'success': False, 'message': 'No data received'})
     
-    # Initialize serial communication with Arduino (adjust COM port)
-def init_serial_connection():
-    try:
-        # Open the serial port (COM6 in this example)
-        serial = win32com.client.Dispatch("MSComm.MSComm.1")
-        serial.CommPort = 7  # COM port (adjust this to your port number)
-        serial.Settings = "9600,N,8,1"  # Baudrate, Parity, Data bits, Stop bits
-        serial.InputLen = 0  # No timeout
-        serial.PortOpen = True  # Open the port
+#     # Initialize serial communication with Arduino (adjust COM port)
+# def init_serial_connection():
+#     try:
+#         # Open the serial port (COM6 in this example)
+#         serial = win32com.client.Dispatch("MSComm.MSComm.1")
+#         serial.CommPort = 7  # COM port (adjust this to your port number)
+#         serial.Settings = "9600,N,8,1"  # Baudrate, Parity, Data bits, Stop bits
+#         serial.InputLen = 0  # No timeout
+#         serial.PortOpen = True  # Open the port
 
-        return serial
-    except Exception as e:
-        print(f"Error opening serial port: {e}")
-        return None
+#         return serial
+#     except Exception as e:
+#         print(f"Error opening serial port: {e}")
+#         return None
 
 # # Flask route to send data to Arduino
 # @app.route('/sendDataArduino', methods=['POST'])

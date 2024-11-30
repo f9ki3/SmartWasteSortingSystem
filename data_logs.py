@@ -93,11 +93,12 @@ def retrieve_trashT():
         
         # Queries to fetch data based on trash type
         queries = {
-            "Paper": "SELECT * FROM trash_collected WHERE trash_type = 'Paper'",
-            "Metal": "SELECT * FROM trash_collected WHERE trash_type = 'Metal'",
-            "Plastic": "SELECT * FROM trash_collected WHERE trash_type = 'Plastic'",
-            "Waste": "SELECT * FROM trash_collected WHERE trash_type = 'Waste'"
+            "Paper": "SELECT * FROM trash_collected WHERE trash_type = 'Paper' ORDER BY date_time_collected DESC",
+            "Metal": "SELECT * FROM trash_collected WHERE trash_type = 'Metal' ORDER BY date_time_collected DESC",
+            "Plastic": "SELECT * FROM trash_collected WHERE trash_type = 'Plastic' ORDER BY date_time_collected DESC",
+            "Waste": "SELECT * FROM trash_collected WHERE trash_type = 'Waste' ORDER BY date_time_collected DESC"
         }
+
         
         # Get column names for the table
         cursor.execute("PRAGMA table_info(trash_collected)")
@@ -124,7 +125,7 @@ def retrieved_recycle():
         cursor = connection.cursor()
         
         # Fetch all rows from the recycle_data table
-        cursor.execute("SELECT * FROM recycle_data")
+        cursor.execute("SELECT * FROM recycle_data ORDER BY timestamp DESC")
         rows = cursor.fetchall()
         
         # Get column names dynamically
