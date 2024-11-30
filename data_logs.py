@@ -1,4 +1,5 @@
 import sqlite3
+from datetime import datetime
 
 # Define the database file
 DATABASE_NAME = "database.db"
@@ -55,6 +56,35 @@ def get_all_records():
         return []
     finally:
         connection.close()
+
+def insert_collect_trash(trash_type):
+    connection = sqlite3.connect(DATABASE_NAME)
+    try:
+        cursor = connection.cursor()
+
+        # Inserting a new trash collection record with the current timestamp
+        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        insert_query = "INSERT INTO trash_collected (date_time_collected, trash_type, amount) VALUES (?, ?, ?)"
+        
+        # You can define the amount (e.g., a fixed value for now)
+        amount = 1  # This can be dynamic if you have a value for the amount
+        
+        cursor.execute(insert_query, (timestamp, trash_type, amount))
+        connection.commit()
+
+        # Fetch the last few records (e.g., the most recent record)
+        select_query = "SELECT id, date_time_collected, trash_type, amount FROM trash_collected ORDER BY date_time_collected DESC LIMIT 5;"
+        cursor.execute(select_query)
+        records = cursor.fetchall()
+
+        return records  # Return the fetched records (you can format this as needed)
+
+    except sqlite3.Error as e:
+        print(f"An error occurred: {e}")
+        return []
+    finally:
+        connection.close()
+
 
 if __name__ == "__main__":
     # Create the database and table

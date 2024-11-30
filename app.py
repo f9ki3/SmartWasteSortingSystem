@@ -2,19 +2,19 @@ from flask import Flask, render_template, jsonify, request, session, redirect, u
 from flask_socketio import SocketIO, emit
 import os, threading
 import serial
-import win32com.client
+# import win32com.client
 import time
 from data_logs import *
 
 app = Flask(__name__)
 socketio = SocketIO(app)
 
-# Initialize serial communication with Arduino (change the port if necessary)
-try:
-    arduino = serial.Serial('COM21', 9600, timeout=1)
-    print("Successfully connected to the Arduino!")
-except serial.SerialException as e:
-    print(f"Error: {e}")
+# # Initialize serial communication with Arduino (change the port if necessary)
+# try:
+#     arduino = serial.Serial('COM21', 9600, timeout=1)
+#     print("Successfully connected to the Arduino!")
+# except serial.SerialException as e:
+#     print(f"Error: {e}")
     
 # Global variables for each data endpoint
 data_requested = False
@@ -161,25 +161,25 @@ def getAllData():
     data = get_all_records()
     return jsonify(data)
 
-@app.route('/sendDataArduino', methods=['POST'])
-def sendDataArduino():
-    input_data = request.form.get('data')  # Get data from the form (or AJAX)
-    if input_data:
-        # Send the data to Arduino via serial
-        arduino.write(input_data.encode())  # Send string to Arduino
+# @app.route('/sendDataArduino', methods=['POST'])
+# def sendDataArduino():
+#     input_data = request.form.get('data')  # Get data from the form (or AJAX)
+#     if input_data:
+#         # Send the data to Arduino via serial
+#         arduino.write(input_data.encode())  # Send string to Arduino
 
-        # Wait for Arduino to process the data
-        time.sleep(2)  # Sleep for 2 seconds to allow Arduino to react
+#         # Wait for Arduino to process the data
+#         time.sleep(2)  # Sleep for 2 seconds to allow Arduino to react
     
-        # Optionally, you can read response from Arduino (if needed)
-        response = arduino.readline().decode('utf-8').strip()
+#         # Optionally, you can read response from Arduino (if needed)
+#         response = arduino.readline().decode('utf-8').strip()
 
-        insert_data(input_data)
+#         insert_data(input_data)
 
-        # Send a JSON response back to the client
-        return jsonify({'success': True, 'message': 'Data sent to Arduino', 'data': input_data, 'arduino_response': response})
-    else:
-        return jsonify({'success': False, 'message': 'No data received'})
+#         # Send a JSON response back to the client
+#         return jsonify({'success': True, 'message': 'Data sent to Arduino', 'data': input_data, 'arduino_response': response})
+#     else:
+#         return jsonify({'success': False, 'message': 'No data received'})
     
 #     # Initialize serial communication with Arduino (adjust COM port)
 # def init_serial_connection():
@@ -222,6 +222,19 @@ def sendDataArduino():
 #             return jsonify({'success': False, 'message': f'Error communicating with Arduino: {e}'})
 #     else:
 #         return jsonify({'success': False, 'message': 'No data received'})
+
+@app.route('/collect_trash', methods=['POST'])
+def collect_trash():
+    data = request.get_json()
+    trash_type = data.get('trash_type')
+    
+    if trash_type:
+        insert_collect_trash(trash_type)
+        # Logic to handle the collected trash, e.g., saving to a database or processing it
+        print(f"Collected {trash_type}")
+        return jsonify({"message": f"Successfully collected {trash_type}."}), 200
+    else:
+        return jsonify({"message": "No trash type selected."}), 400
 
 if __name__ == "__main__":
     socketio.run(app,host="0.0.0.0", debug=True)

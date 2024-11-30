@@ -30,7 +30,121 @@
             <div class="col-12 col-md-8 h-100">
                 <!-- Waste Level Monitoring Section -->
                 <div id="wasteLevelContent" class="rounded-4 p-5" style="background-color: #fefffe;">
-                    <h2 class="fw-bolder">Waste Level Monitoring</h2>
+                    <div class="d-flex flex-row justify-content-between align-items-center" data-bs-toggle="modal" data-bs-target="#modal-collect">
+                        <h2 class="fw-bolder">Waste Level Monitoring</h2>
+                        <button class="btn btn-success btn-sm">Collect Trash</button>
+                    </div>
+                    <!-- Modal -->
+                    <div class="modal fade" id="modal-collect" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h1 class="modal-title fs-5" id="exampleModalLabel">Collect Trash</h1>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              <div class="row g-3">
+                                <div class="col-6">
+                                  <div class="p-4 d-flex flex-column justify-content-center align-items-center border rounded-4 trash-type" data-trash="Paper">
+                                    <i class="bi bi-file-earmark-fill" style="font-size: 50px;"></i>
+                                    <p>Paper</p>
+                                  </div>
+                                </div>
+                                <div class="col-6">
+                                  <div class="p-4 d-flex flex-column justify-content-center align-items-center border rounded-4 trash-type" data-trash="Waste">
+                                    <i class="bi bi-tropical-storm" style="font-size: 50px;"></i>
+                                    <p>Waste</p>
+                                  </div>
+                                </div>
+                                <div class="col-6">
+                                  <div class="p-4 d-flex flex-column justify-content-center align-items-center border rounded-4 trash-type" data-trash="Plastic">
+                                    <i class="bi bi-recycle" style="font-size: 50px;"></i>
+                                    <p>Plastic</p>
+                                  </div>
+                                </div>
+                                <div class="col-6">
+                                  <div class="p-4 d-flex flex-column justify-content-center align-items-center border rounded-4 trash-type" data-trash="Metal">
+                                    <i class="bi bi-trash2" style="font-size: 50px;"></i>
+                                    <p>Metal</p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button id="closeBtn" type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
+                              <button type="button" id="collectTrashBtn" class="btn btn-sm btn-success">Collect Trash</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <script>
+                        document.addEventListener("DOMContentLoaded", () => {
+                          const trashItems = document.querySelectorAll(".trash-type");
+                          let selectedTrash = null;
+                      
+                          // Add click event listener to each trash item
+                          trashItems.forEach(item => {
+                            item.addEventListener("click", () => {
+                              // If the item is already selected, unselect it
+                              if (item.classList.contains("selected")) {
+                                item.classList.remove("selected");
+                                selectedTrash = null;
+                              } else {
+                                // Remove the selected class from previously selected item
+                                if (selectedTrash) {
+                                  selectedTrash.classList.remove("selected");
+                                }
+                      
+                                // Mark the clicked item as selected
+                                item.classList.add("selected");
+                                selectedTrash = item;
+                              }
+                            });
+                          });
+                      
+                          // Add click event listener to the "Collect Trash" button
+                          document.getElementById("collectTrashBtn").addEventListener("click", () => {
+                            if (selectedTrash) {
+                              const trashType = selectedTrash.getAttribute("data-trash");
+                              console.log(`Collected: ${trashType}`);
+                              
+                              // Send trashType to the Flask endpoint via fetch (AJAX request)
+                              fetch("/collect_trash", {
+                                method: "POST", 
+                                headers: {
+                                  "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify({ trash_type: trashType }) // Sending the selected trash type
+                              })
+                              .then(response => response.json())
+                              .then(data => {
+                                // Handle the response from Flask (if needed)
+                                console.log("Response from Flask:", data);
+                                alert(data.message); // Display message returned from Flask
+
+                                $('#closeBtn').click()
+                      
+                                // Close the modal if successful
+                                if (data.success) {
+                                  // Get the modal element and close it using Bootstrap's modal API
+                                  const modalElement = document.getElementById('modal-collect');
+                                  const modal = new bootstrap.Modal(modalElement);
+                                  modal.hide();  // Close the modal
+                                  $('#closeBtn').click()
+                                }
+                              })
+                              .catch(error => {
+                                console.error("Error:", error);
+                                alert("Error while collecting trash.");
+                              });
+                            } else {
+                              alert("Please select a trash type to collect.");
+                            }
+                          });
+                        });
+                      </script>                      
+                      
                     <div class="row mt-3">
                         <div class="col-12 col-md-6">
                             <div class="d-flex flex-row justify-content-between">
@@ -106,21 +220,20 @@
                     
                 </div>
                 
-
-                <!-- <div class="rounded-4 p-5 mt-4" style="background-color: #fefffe;">
+                <div id="ai_camera_div" class="rounded-4 p-5 mt-4" style="background-color: #fefffe; display: none">
                     <h2 class="fw-bolder">AI Camera</h2>
                 </div>
-                <div class="rounded-4 p-5 mt-4" style="background-color: #fefffe;">
+                <div id="plastic_div" class="rounded-4 p-5 mt-4" style="background-color: #fefffe; display: none">
                     <h2 class="fw-bolder">Plastic Bin</h2>
                 </div>
-                <div class="rounded-4 p-5 mt-4" style="background-color: #fefffe;">
+                <div id="paper_div" class="rounded-4 p-5 mt-4" style="background-color: #fefffe; display: none">
                     <h2 class="fw-bolder">Paper Bin</h2>
                 </div>
-                <div class="rounded-4 p-5 mt-4" style="background-color: #fefffe;">
+                <div id="metal_div" class="rounded-4 p-5 mt-4" style="background-color: #fefffe; display: none">
                     <h2 class="fw-bolder">Metal Bin</h2>
                 </div>
-                <div class="rounded-4 p-5 mt-4" style="background-color: #fefffe;">
-                    <h2 class="fw-bolder">Waste Bin</h2> -->
+                <div id="waste_div" class="rounded-4 p-5 mt-4" style="background-color: #fefffe; display: none">
+                    <h2 class="fw-bolder">Waste Bin</h2>
                 </div>
             </div>
         </div>

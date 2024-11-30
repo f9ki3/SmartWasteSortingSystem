@@ -4,6 +4,17 @@
   border-color: green; /* Border color for the active page */
 }
 
+.trash-type:hover {
+  background-color: #eeffe7;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+/* Selected effect */
+.selected {
+  background-color: #d4edda;
+  border-color: #155724;
+}
+
 #webcam {
   position: absolute;
   height: auto;
