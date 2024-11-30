@@ -221,24 +221,179 @@
                 </div>
                 
                 <div id="ai_camera_div" class="rounded-4 p-5 mt-4" style="background-color: #fefffe; display: none">
-                    <h2 class="fw-bolder">AI Camera</h2>
+                    <h2 class="fw-bolder">AI Camera Collected</h2>
+                    <div style="height: 500px; overflow: auto; display: block; width: 100%;">
+                        <table class="table text-muted" style="font-size: 12px">
+                            <thead style="position: sticky; top: 0; background-color: #fff; z-index: 1;">
+                                <tr>
+                                    <th>No.</th>
+                                    <th>Date</th>
+                                    <th>Type</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recycle-data"></tbody>
+                        </table>
+                    </div>
+                    <script>
+                        $(document).ready(function() {
+                            // Make AJAX request to the /retrieved_recycle endpoint
+                            $.ajax({
+                                url: '/retrieved_recycle',  // The URL for the API endpoint
+                                method: 'GET',  // HTTP method (GET in this case)
+                                success: function(response) {
+                                    // Empty the table body before adding new rows
+                                    $('#recycle-data').empty();
+                        
+                                    // Iterate through the response data and add rows to the table
+                                    response.forEach(function(item, index) {
+                                        // Create a new row with the data from the response
+                                        var row = `
+                                            <tr>
+                                                <td>${index + 1}</td>  <!-- Display row number -->
+                                                <td>${item.timestamp}</td>  <!-- Display timestamp -->
+                                                <td>${item.recycle_type}</td>  <!-- Display recycle type -->
+                                            </tr>
+                                        `;
+                                        
+                                        // Append the new row to the table body
+                                        $('#recycle-data').append(row);
+                                    });
+                                },
+                                error: function(error) {
+                                    console.error('Error fetching data:', error);
+                                }
+                            });
+                        });                        
+                    </script>                    
                 </div>
                 <div id="plastic_div" class="rounded-4 p-5 mt-4" style="background-color: #fefffe; display: none">
-                    <h2 class="fw-bolder">Plastic Bin</h2>
+                    <h2 class="fw-bolder">Plastic Bin Collected</h2>
+                    <div style="height: 500px; overflow: auto; display: block; width: 100%;">
+                        <table class="table text-muted" style="font-size: 12px">
+                            <thead style="position: sticky; top: 0; background-color: #fff; z-index: 1;">
+                                <tr>
+                                    <th style="width: 25%">No.</th>
+                                    <th style="width: 25%">Date</th>
+                                    <th style="width: 25%">Amount</th>
+                                    <th style="width: 25%">Type</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recycle-data-plastic"></tbody>
+                        </table>
+                    </div>
                 </div>
                 <div id="paper_div" class="rounded-4 p-5 mt-4" style="background-color: #fefffe; display: none">
-                    <h2 class="fw-bolder">Paper Bin</h2>
+                    <h2 class="fw-bolder">Paper Bin Collected</h2>
+                    <div style="height: 500px; overflow: auto; display: block; width: 100%;">
+                        <table class="table text-muted" style="font-size: 12px">
+                            <thead style="position: sticky; top: 0; background-color: #fff; z-index: 1;">
+                                <tr>
+                                    <th style="width: 25%">No.</th>
+                                    <th style="width: 25%">Date</th>
+                                    <th style="width: 25%">Amount</th>
+                                    <th style="width: 25%">Type</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recycle-paper"></tbody>
+                        </table>
+                    </div>
                 </div>
                 <div id="metal_div" class="rounded-4 p-5 mt-4" style="background-color: #fefffe; display: none">
-                    <h2 class="fw-bolder">Metal Bin</h2>
+                    <h2 class="fw-bolder">Metal Bin Collected</h2>
+                    <div style="height: 500px; overflow: auto; display: block; width: 100%;">
+                        <table class="table text-muted" style="font-size: 12px">
+                            <thead style="position: sticky; top: 0; background-color: #fff; z-index: 1;">
+                                <tr>
+                                    <th style="width: 25%">No.</th>
+                                    <th style="width: 25%">Date</th>
+                                    <th style="width: 25%">Amount</th>
+                                    <th style="width: 25%">Type</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recycle-metal"></tbody>
+                        </table>
+                    </div>
                 </div>
                 <div id="waste_div" class="rounded-4 p-5 mt-4" style="background-color: #fefffe; display: none">
-                    <h2 class="fw-bolder">Waste Bin</h2>
+                    <h2 class="fw-bolder">Waste Bin Collected</h2>
+                    <div style="height: 500px; overflow: auto; display: block; width: 100%;">
+                        <table class="table text-muted" style="font-size: 12px">
+                            <thead style="position: sticky; top: 0; background-color: #fff; z-index: 1;">
+                                <tr>
+                                    <th style="width: 25%">No.</th>
+                                    <th style="width: 25%">Date</th>
+                                    <th style="width: 25%">Amount</th>
+                                    <th style="width: 25%">Type</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recycle-waste"></tbody>
+                            <script>
+                                $(document).ready(function() {
+                                    $.ajax({
+                                        url: '/retrieve_trash',
+                                        method: 'GET',
+                                        success: function(response) {
+                                            // Check if the response contains data for "Metal"
+                                            if (response.Metal && Array.isArray(response.Metal)) {
+                                                // Clear existing content
+                                                $('#recycle-metal').empty();
+                                                
+                                                // Iterate through each "Metal" item and append to the tbody
+                                                response.Metal.forEach(function(item) {
+                                                    var row = '<tr>' +
+                                                        '<td>' + item.id + '</td>' +
+                                                        '<td>' + item.trash_type + '</td>' +
+                                                        '<td>' + item.amount + '</td>' +
+                                                        '<td>' + item.date_time_collected + '</td>' +
+                                                        '</tr>';
+                                                    $('#recycle-metal').append(row);
+                                                });
+                            
+                                                // Iterate through each "Plastic" item and append to the tbody
+                                                response.Plastic.forEach(function(item) {
+                                                    var row = '<tr>' +
+                                                        '<td>' + item.id + '</td>' +
+                                                        '<td>' + item.trash_type + '</td>' +
+                                                        '<td>' + item.amount + '</td>' +
+                                                        '<td>' + item.date_time_collected + '</td>' +
+                                                        '</tr>';
+                                                    $('#recycle-data-plastic').append(row);
+                                                });
+                            
+                                                // Iterate through each "Paper" item and append to the tbody
+                                                response.Paper.forEach(function(item) {
+                                                    var row = '<tr>' +
+                                                        '<td>' + item.id + '</td>' +
+                                                        '<td>' + item.trash_type + '</td>' +
+                                                        '<td>' + item.amount + '</td>' +
+                                                        '<td>' + item.date_time_collected + '</td>' +
+                                                        '</tr>';
+                                                    $('#recycle-paper').append(row);
+                                                });
+                            
+                                                // Iterate through each "Waste" item and append to the tbody
+                                                response.Waste.forEach(function(item) {
+                                                    var row = '<tr>' +
+                                                        '<td>' + item.id + '</td>' +
+                                                        '<td>' + item.trash_type + '</td>' +
+                                                        '<td>' + item.amount + '</td>' +
+                                                        '<td>' + item.date_time_collected + '</td>' +
+                                                        '</tr>';
+                                                    $('#recycle-waste').append(row);
+                                                });
+                                            }
+                                        },
+                                        error: function(xhr, status, error) {
+                                            console.log("Error fetching trash data: " + error);
+                                        }
+                                    });
+                                });
+                            </script>                            
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-        
-        
     </div>
     {% include 'footer_links.html' %}
 </body>

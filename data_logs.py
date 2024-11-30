@@ -85,6 +85,62 @@ def insert_collect_trash(trash_type):
     finally:
         connection.close()
 
+def retrieve_trashT():
+    connection = sqlite3.connect(DATABASE_NAME)
+    trash_data = {}  # Dictionary to hold the results
+    try:
+        cursor = connection.cursor()
+        
+        # Queries to fetch data based on trash type
+        queries = {
+            "Paper": "SELECT * FROM trash_collected WHERE trash_type = 'Paper'",
+            "Metal": "SELECT * FROM trash_collected WHERE trash_type = 'Metal'",
+            "Plastic": "SELECT * FROM trash_collected WHERE trash_type = 'Plastic'",
+            "Waste": "SELECT * FROM trash_collected WHERE trash_type = 'Waste'"
+        }
+        
+        # Get column names for the table
+        cursor.execute("PRAGMA table_info(trash_collected)")
+        columns = [info[1] for info in cursor.fetchall()]  # Extract column names
+        
+        # Execute each query and store results in the dictionary
+        for trash_type, query in queries.items():
+            cursor.execute(query)
+            rows = cursor.fetchall()
+            trash_data[trash_type] = [dict(zip(columns, row)) for row in rows]
+
+    except sqlite3.Error as e:
+        print(f"An error occurred: {e}")
+        return {}
+    finally:
+        connection.close()
+    
+    return trash_data
+
+def retrieved_recycle():
+    connection = sqlite3.connect(DATABASE_NAME)
+    recycle_data = []  # List to hold the results
+    try:
+        cursor = connection.cursor()
+        
+        # Fetch all rows from the recycle_data table
+        cursor.execute("SELECT * FROM recycle_data")
+        rows = cursor.fetchall()
+        
+        # Get column names dynamically
+        cursor.execute("PRAGMA table_info(recycle_data)")
+        columns = [info[1] for info in cursor.fetchall()]  # Extract column names
+        
+        # Convert rows to a list of dictionaries
+        recycle_data = [dict(zip(columns, row)) for row in rows]  # Ensure recycle_data is a list
+
+    except sqlite3.Error as e:
+        print(f"An error occurred: {e}")
+        return {}
+    finally:
+        connection.close()
+    
+    return recycle_data
 
 if __name__ == "__main__":
     # Create the database and table
